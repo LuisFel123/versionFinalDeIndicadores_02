@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <f:view>
+            <p:growl id="messages"/>
+
+
+            <p:card style="width: 25rem; margin-bottom: 2em; margin-top: 1em; text-align: center; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+
+
+
+                <f:facet name="title">
+                    Registro de una persona 
+                </f:facet>
+
+                <p:avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" style="background-color:#2196F3; color:#fff" shape="circle" />
+
+
+                <h:form id="formu">
+                    <h:panelGrid columns="2">
+
+
+                        <p:outputLabel value="Nombre:" for="nombre" />
+                        <p:inputText id="nombre" value="#{aPersona.perosna.nombre}" title="Nombre" required="true" requiredMessage="El Nombre es requerido."/>
+                        <p:outputLabel value="Usuario:" for="usuario" />
+                        <p:inputText id="usuario" value="#{aPersona.perosna.usuario}" title="Usuario" required="true" requiredMessage="El usuario es requerido."/>
+                        <p:outputLabel value="Password:" for="password" />
+                        <p:password id="password" value="#{aPersona.perosna.password}" title="Password" required="true" requiredMessage="El password es requerido."/>
+                        <p:outputLabel  value="FechaNac:{dd/mm/aaaa}" for="fechaNac" />
+                        <p:inputText id="fechaNac" value="#{aPersona.perosna.fechaNac}" title="FechaNac" required="true" requiredMessage="La fecha de nacimiento es requerida.">
+                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Mexico_City"/>
+                        </p:inputText>
+                        <p:outputLabel value="Genero:" for="genero"/>
+                        <p:selectOneRadio id="genero" required="true" value="#{aPersona.perosna.genero}" rendered="true" requiredMessage="El genero es requerido.">
+                            <f:selectItem itemValue="F" itemLabel="mujer" />
+                            <f:selectItem itemValue="M" itemLabel="hombre"/>
+                        </p:selectOneRadio>
+                        <p:outputLabel value="Estatura(m,cm):" for="estatura" />
+                        <p:inputText id="estatura" value="#{aPersona.perosna.estatura}"  required="true" title="Estatura" requiredMessage="La Estatura es requerida." >
+                            <f:validateDoubleRange minimum="1.30" maximum="2.20" />
+                        </p:inputText>
+                        <p:commandButton style="margin-top: 1em;" value="Registrar" actionListener="#{aPersona.registroPersona()}"  process="@form" update="messages :formu :formuta" icon="pi pi-check" />
+                        <p:commandButton  style="margin-top: 1em;" value="Regresar" action="index" styleClass="ui-button-warning" icon="pi pi-replay" process="@this"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:card>
+
+
+
+            <h:form id="formuta" style="margin-top: 40em;">
+
+                <div class="card">
+
+                    <p:dataTable id="tabla" var="persona" value="#{aPersona.personas}" editable="true"
+                                 style="margin-bottom:20px">
+                        <f:facet name="header">
+                            Registro de personas                        
+                        </f:facet>
+                        <p:ajax event="rowEdit" listener="#{dtEditView.onRowEdit}" />
+                        <p:ajax event="rowEditCancel" listener="#{dtEditView.onRowCancel}"/>
+
+                        <p:column headerText="id persona">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.idPersona}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInput" value="#{persona.idPersona}" style="width:100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Nombre">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.nombre}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{persona.nombre}" style="width:100%" label="nombre"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Usuario">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.usuario}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{persona.usuario}" style="width:100%" label="usuario"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+
+
+                        <p:column headerText="Password">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="********"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:password value="#{persona.password}" style="width:100%" label="password"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Genero">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.genero eq 'F'?'FEMENINO':'MASCULINO'}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:selectOneMenu value="#{persona.genero}" style="width:100%">
+                                        <f:selectItem itemValue="F" itemLabel="Mujer" />
+                                        <f:selectItem itemValue="M" itemLabel="Hombre"/>
+                                    </h:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+
+                        <p:column headerText="Fecha nacimiento">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.fechaNac}">
+                                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{persona.fechaNac}" style="width:100%" label="fecha" >
+                                        <f:convertDateTime pattern="MM/dd/yyyy"/>
+                                    </p:inputText>
+
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Estatura (m,cm)">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.estatura}">
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{persona.estatura}" style="width:100%" label="estatura" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Edad">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{persona.edad}">
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{persona.edad}" style="width:100%" label="edad" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+
+                        <p:column headerText="Acciones" style="width:6rem">
+                            <p:commandButton value="eliminar"  styleClass="rounded-button ui-button-danger" icon="pi pi-trash"  update=":formuta messages" action="#{aPersona.eliminarPersona(persona)}"/>
+                            <p:commandButton style="margin-top: 1em" value="medidas" styleClass="rounded-button ui-button-warning" icon="pi pi-user" />
+
+                        </p:column>
+
+
+                    </p:dataTable>
+                </div>
+            </h:form>
+
+
+        </f:view>
+
+
+    </h:body>
+</html>
