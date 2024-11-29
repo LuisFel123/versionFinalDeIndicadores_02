@@ -5,6 +5,7 @@
 package modelo;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -14,12 +15,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,12 +39,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Persona.findByFechaNac", query = "SELECT p FROM Persona p WHERE p.fechaNac = :fechaNac"),
     @NamedQuery(name = "Persona.findByEstatura", query = "SELECT p FROM Persona p WHERE p.estatura = :estatura"),
     @NamedQuery(name = "Persona.findByGenero", query = "SELECT p FROM Persona p WHERE p.genero = :genero"),
-    @NamedQuery(name = "Persona.findByNombre", query = "SELECT p FROM Persona p WHERE p.nombre = :nombre")})
-   // @NamedQuery (name = "Persona.findByUsuarioPassword", query = "SELECT p FROM Persona p WHERE p.usuario= :usuario AND p.password= :password")
-    @NamedQuery (name = "Persona.findByUsuarioPassword", query = "SELECT p FROM Persona p WHERE p.usuario= :usuario")
-
+    @NamedQuery(name = "Persona.findByNombre", query = "SELECT p FROM Persona p WHERE p.nombre = :nombre"),
+    @NamedQuery(name = "Persona.findByEdad", query = "SELECT p FROM Persona p WHERE p.edad = :edad"),
+    @NamedQuery(name = "Persona.findByUsuarioPasswordLogin", query = "SELECT p FROM Persona p WHERE p.usuario= :usuario AND p.password= :password"),
+    @NamedQuery(name = "Persona.findByUsuarioPassword", query = "SELECT p FROM Persona p WHERE p.usuario= :usuario")
+})
 public class Persona implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_persona")
+    private Integer idPersona;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -52,6 +62,14 @@ public class Persona implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "password")
     private String password;
+    @Column(name = "fecha_nac")
+    @Temporal(TemporalType.DATE)
+    private Date fechaNac;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "estatura")
+    private Double estatura;
+    @Column(name = "genero")
+    private Character genero;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -61,21 +79,8 @@ public class Persona implements Serializable {
     @NotNull
     @Column(name = "edad")
     private double edad;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id_persona")
-    private Integer idPersona;
-    @Column(name = "fecha_nac")
-    @Temporal(TemporalType.DATE)
-    private Date fechaNac;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "estatura")
-    private Double estatura;
-    @Column(name = "genero")
-    private Character genero;
+    @OneToMany(mappedBy = "idPersona")
+    private Collection<Medida> medidaCollection;
 
     public Persona() {
     }
@@ -84,22 +89,12 @@ public class Persona implements Serializable {
         this.idPersona = idPersona;
     }
 
-    public Persona(Integer idPersona, String usuario, String password, String nombre) {
+    public Persona(Integer idPersona, String usuario, String password, String nombre, double edad) {
         this.idPersona = idPersona;
-        this.usuario = usuario;
-        this.password = password;
-        this.nombre = nombre;
-    }
-
-    public Persona(String usuario, String password, String nombre, double edad, Integer idPersona, Date fechaNac, Double estatura, Character genero) {
         this.usuario = usuario;
         this.password = password;
         this.nombre = nombre;
         this.edad = edad;
-        this.idPersona = idPersona;
-        this.fechaNac = fechaNac;
-        this.estatura = estatura;
-        this.genero = genero;
     }
 
     public Integer getIdPersona() {
@@ -110,6 +105,21 @@ public class Persona implements Serializable {
         this.idPersona = idPersona;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public Date getFechaNac() {
         return fechaNac;
@@ -135,6 +145,30 @@ public class Persona implements Serializable {
         this.genero = genero;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public double getEdad() {
+        return edad;
+    }
+
+    public void setEdad(double edad) {
+        this.edad = edad;
+    }
+
+    @XmlTransient
+    public Collection<Medida> getMedidaCollection() {
+        return medidaCollection;
+    }
+
+    public void setMedidaCollection(Collection<Medida> medidaCollection) {
+        this.medidaCollection = medidaCollection;
+    }
 
     @Override
     public int hashCode() {
@@ -158,41 +192,7 @@ public class Persona implements Serializable {
 
     @Override
     public String toString() {
-        return "Persona{" + "idPersona=" + idPersona + ", usuario=" + usuario + ", password=" + password + ", fechaNac=" + fechaNac + ", estatura=" + estatura + ", genero=" + genero + ", nombre=" + nombre + '}';
+        return "modelo.Persona[ idPersona=" + idPersona + " ]";
     }
 
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public double getEdad() {
-        return edad;
-    }
-
-    public void setEdad(double edad) {
-        this.edad = edad;
-    }
-
-   
-    
 }

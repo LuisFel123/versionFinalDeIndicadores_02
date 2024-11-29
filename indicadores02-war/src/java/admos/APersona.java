@@ -162,6 +162,10 @@ public class APersona implements Serializable {
         perosna = new Persona();
     }
 
+    public Boolean registradoLogin() {
+        return mDPersona.personaUpLogin(perosna)==null;
+    }
+
     public void registroPersona() {
         if (!registrado2()) {
             calcularEdadDO(perosna);
@@ -180,6 +184,33 @@ public class APersona implements Serializable {
             System.out.println("El usuario ya existe");
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "El usuario ya existe",
+                    null);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+            FacesContext.getCurrentInstance().validationFailed();
+
+        }
+    }
+
+    public void autenticacion() {
+        System.out.println(perosna.getUsuario());
+        System.out.println(perosna.getPassword());
+        System.out.println(registradoLogin());
+        if (!registradoLogin()) {
+
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Bienvenido",
+                    null);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+
+            FacesContext.getCurrentInstance().validationFailed();
+            System.out.println("Usuario registrado");
+            creaPersona();
+
+        } else {
+            System.out.println("Usuario o contraseña incorrectos");
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Usuario o contraseña incorrectos",
                     null);
             FacesContext.getCurrentInstance().addMessage(null, message);
 

@@ -11,13 +11,32 @@
     </h:head>
     <h:body class="inicio">
         <h1 style="text-align: center"> Aplicacion de indicadores de salud de personas </h1>
-        <f:view>
-            <h:form style="display: flex; justify-content: center; align-items: center;">
-                <p:commandButton styleClass="ui-button-success" value="Registrate" action="registro_persona"/>
 
+        <f:view>
+            <p:growl id="messages"/>
+            <h2 style="text-align: center"><h:outputText value="Login"/></h2>
+
+
+            <h:form style="display: flex; justify-content: center; align-items: center;">
+                <h:panelGrid columns="2">
+
+                    <p:outputLabel value="Usuario" for="usuario" />
+                    <p:inputText id="usuario" value="#{aPersona.perosna.usuario}" title="Usuario" required="true" requiredMessage="El usuario es requerido."/>
+
+                    <p:outputLabel value="Password:" for="password" />
+                    <p:password id="password" value="#{aPersona.perosna.password}" title="Password" required="true" requiredMessage="La contrasea es requerida."/>
+
+                    <p:commandButton styleClass="ui-button-success" value="Ingresar" actionListener="#{aPersona.autenticacion()}"  update="@form messages"/>
+                    <p:commandButton style="margin-left: 6em" styleClass="ui-button-info" value="Registrate" action="registro_persona" process="@this"/>
+
+
+                </h:panelGrid>
 
             </h:form>
+
         </f:view>
+
+
 
     </h:body>
 </html>

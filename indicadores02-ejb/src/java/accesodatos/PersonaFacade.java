@@ -25,18 +25,20 @@ public class PersonaFacade extends AbstractFacade<Persona> {
         return em;
     }
 
-    /*
-    public Persona persona_usu_pas(String usuario, String password) {
+    
+    public Persona persona_usu_pas_login(String usuario, String password) {
         Persona persona = null;
+        System.out.println(usuario);
+        System.out.println(password);
         try {
-            Query consultaup = em.createNamedQuery("Persona.findByUsuarioPassword");
+            Query consultaup = em.createNamedQuery("Persona.findByUsuarioPasswordLogin");
             consultaup.setParameter("usuario", usuario);
             consultaup.setParameter("password", password);
             persona = (Persona) consultaup.getSingleResult();
         } catch (Exception e) {return null;}
         return persona;
     }
-     */
+     
     public Persona persona_usu_pas(String usuario) {
         Persona persona = null;
         try {

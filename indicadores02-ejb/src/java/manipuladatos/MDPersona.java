@@ -42,18 +42,16 @@ public class MDPersona {
         }
     }
 
-    /*
-    public Persona personaUp(Persona p){
-     return personaFacade.persona_usu_pas(p.getUsuario(), p.getPassword());
+    public Persona personaUpLogin(Persona p) {
+        return personaFacade.persona_usu_pas_login(p.getUsuario(), p.getPassword());
     }
-     */
 
     public Persona personaUp(Persona p) {
         return personaFacade.persona_usu_pas(p.getUsuario());
     }
 
-    public Persona personauUsuario(Persona p){
+    public Persona personauUsuario(Persona p) {
         return personaFacade.persona_usuario(p.getUsuario());
     }
-   
+
 }
